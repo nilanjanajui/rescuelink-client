@@ -39,7 +39,7 @@ export default function Hero() {
     return (
         <section className="relative min-h-[65vh] flex flex-col justify-center items-center text-center px-4 overflow-hidden">
             <Image
-                src="https://picsum.photos/seed/rescuelink-hero/1600/900"
+                src="https://images.unsplash.com/photo-1638401607292-ba5ca538031e?q=80&w=1170&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
                 alt=""
                 fill
                 priority
