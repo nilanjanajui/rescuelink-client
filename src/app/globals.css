@@ -22,6 +22,7 @@
 :root {
   --background: #ffffff;
   --foreground: #0F172A;
+  color-scheme: light;
 }
 
 body {
