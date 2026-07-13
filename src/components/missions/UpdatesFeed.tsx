@@ -13,9 +13,9 @@ export default function UpdatesFeed({ updates }: { updates: MissionUpdate[] }) {
                     <div className="flex items-center justify-between mb-1">
                         <div className="flex items-center gap-2">
                             <span className="w-8 h-8 rounded-full bg-neutral-200 flex items-center justify-center text-sm font-semibold">
-                                {update.authorName[0]?.toUpperCase()}
+                                {update.authorName?.[0]?.toUpperCase() ?? "?"}
                             </span>
-                            <span className="font-medium text-sm text-neutral-900">{update.authorName}</span>
+                            <span className="font-medium text-sm text-neutral-900">{update.authorName ?? "Unknown"}</span>
                         </div>
                         <span className="text-xs text-neutral-500">{timeAgo(update.createdAt)}</span>
                     </div>
