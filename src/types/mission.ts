@@ -1,0 +1,38 @@
+export type DisasterType =
+  'flood' | 'earthquake' | 'fire' | 'cyclone' | 'other';
+export type Urgency = 'critical' | 'moderate' | 'low';
+export type MissionStatus = 'active' | 'resolved';
+
+export interface Mission {
+  _id: string;
+  title: string;
+  shortDescription: string;
+  fullDescription: string;
+  disasterType: DisasterType;
+  urgency: Urgency;
+  status: MissionStatus;
+  location: string;
+  volunteersNeeded: number;
+  volunteersJoined: number;
+  imageUrl: string;
+  images: string[];
+  postedBy: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface MissionUpdate {
+  _id: string;
+  missionId: string;
+  userId: string;
+  authorName: string;
+  message: string;
+  createdAt: string;
+}
+
+export interface Pagination {
+  total: number;
+  page: number;
+  pageSize: number;
+  totalPages: number;
+}
