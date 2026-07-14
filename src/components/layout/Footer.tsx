@@ -20,10 +20,10 @@ export default function Footer() {
                 <div>
                     <p className="font-semibold text-neutral-900 mb-2 text-sm">Resources</p>
                     <ul className="space-y-1 text-sm text-neutral-600">
-                        <li><Link href="/about">Disaster Manuals</Link></li>
-                        <li><Link href="/about">Impact Reports</Link></li>
-                        <li><Link href="/about">Press Kit</Link></li>
-                        <li><Link href="/about">Success Stories</Link></li>
+                        <li><Link href="/resources/disaster-manuals">Disaster Manuals</Link></li>
+                        <li><Link href="/resources/impact-reports">Impact Reports</Link></li>
+                        <li><Link href="/resources/press-kit">Press Kit</Link></li>
+                        <li><Link href="/resources/success-stories">Success Stories</Link></li>
                     </ul>
                 </div>
                 <div>
@@ -33,15 +33,6 @@ export default function Footer() {
                         <li><Link href="/terms-of-service">Terms of Service</Link></li>
                         <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                         <li><Link href="/contact">Ethics Statement</Link></li>
-                    </ul>
-                </div>
-                <div>
-                    <p className="font-semibold text-neutral-900 mb-2 text-sm">Resources</p>
-                    <ul className="space-y-1 text-sm text-neutral-600">
-                        <li><Link href="/resources/disaster-manuals">Disaster Manuals</Link></li>
-                        <li><Link href="/resources/impact-reports">Impact Reports</Link></li>
-                        <li><Link href="/resources/press-kit">Press Kit</Link></li>
-                        <li><Link href="/resources/success-stories">Success Stories</Link></li>
                     </ul>
                 </div>
             </div>
