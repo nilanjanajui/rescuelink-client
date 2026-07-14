@@ -35,6 +35,15 @@ export default function Footer() {
                         <li><Link href="/contact">Ethics Statement</Link></li>
                     </ul>
                 </div>
+                <div>
+                    <p className="font-semibold text-neutral-900 mb-2 text-sm">Resources</p>
+                    <ul className="space-y-1 text-sm text-neutral-600">
+                        <li><Link href="/resources/disaster-manuals">Disaster Manuals</Link></li>
+                        <li><Link href="/resources/impact-reports">Impact Reports</Link></li>
+                        <li><Link href="/resources/press-kit">Press Kit</Link></li>
+                        <li><Link href="/resources/success-stories">Success Stories</Link></li>
+                    </ul>
+                </div>
             </div>
             <div className="max-w-7xl mx-auto px-4 md:px-8 mt-10 pt-6 border-t border-neutral-100 flex flex-col md:flex-row justify-between items-center gap-2 text-sm text-neutral-600">
                 <p>© 2026 RescueLink Disaster Relief Platform. All rights reserved.</p>

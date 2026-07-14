@@ -36,3 +36,11 @@ export interface Pagination {
   pageSize: number;
   totalPages: number;
 }
+
+export interface Testimonial {
+    _id: string;
+    quote: string;
+    authorName: string;
+    authorRole: string;
+    avatarUrl: string;
+}
