@@ -45,7 +45,7 @@ export default function Newsletter() {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     placeholder="Enter your email"
-                                    className="flex-1 rounded-xl px-4 py-2.5 text-neutral-900 focus:outline-none"
+                                    className="flex-1 rounded-xl px-4 py-2.5 text-neutral-900 focus:outline-none focus:ring-2 focus:ring-white"
                                 />
                                 <Button type="submit" variant="secondary" disabled={loading}>
                                     {loading ? "..." : "Sign Up"}

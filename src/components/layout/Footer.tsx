@@ -30,8 +30,8 @@ export default function Footer() {
                     <p className="font-semibold text-neutral-900 mb-2 text-sm">Support</p>
                     <ul className="space-y-1 text-sm text-neutral-600">
                         <li><Link href="/contact">Contact Us</Link></li>
-                        <li><Link href="/contact">Terms of Service</Link></li>
-                        <li><Link href="/contact">Privacy Policy</Link></li>
+                        <li><Link href="/terms-of-service">Terms of Service</Link></li>
+                        <li><Link href="/privacy-policy">Privacy Policy</Link></li>
                         <li><Link href="/contact">Ethics Statement</Link></li>
                     </ul>
                 </div>
