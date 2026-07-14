@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, ResponsiveContainer, Tooltip, Cell } from "recharts";
 import Card from "@/components/ui/Card";
 
 type VolunteerGrowth = { month: string; volunteers: number };
@@ -14,6 +14,17 @@ export default function ImpactStats() {
             .then(setData)
             .catch(() => { });
     }, []);
+
+    const data1 = [
+        { month: "Jan", volunteers: 20, color: "#B00000" },
+        { month: "Feb", volunteers: 35, color: "#E00000" },
+        { month: "Mar", volunteers: 22, color: "#B00000" },
+        { month: "Apr", volunteers: 45, color: "#0F766E" },
+        { month: "May", volunteers: 33, color: "#C00000" },
+        { month: "Jun", volunteers: 40, color: "#E00000" },
+    ];
+
+
 
     return (
         <section className="max-w-7xl mx-auto px-4 md:px-8 py-16">
@@ -41,13 +52,17 @@ export default function ImpactStats() {
                     </div>
                 </div>
                 <Card className="h-80">
-                    <p className="text-sm text-neutral-600 mb-2">Volunteer Activity — Last 6 Months</p>
+                    <p className="text-sm text-neutral-600 mb-2">Volunteer Activity - Last 6 Months</p>
                     <ResponsiveContainer width="100%" height="90%">
                         <BarChart data={data}>
                             <XAxis dataKey="month" tick={{ fontSize: 12 }} />
                             <YAxis tick={{ fontSize: 12 }} />
                             <Tooltip />
-                            <Bar dataKey="volunteers" fill="var(--color-primary)" radius={[6, 6, 0, 0]} />
+                            <Bar dataKey="volunteers" radius={[6, 6, 0, 0]}>
+                                {data1.map((entry, index) => (
+                                    <Cell key={index} fill={entry.color} />
+                                ))}
+                            </Bar>
                         </BarChart>
                     </ResponsiveContainer>
                 </Card>
