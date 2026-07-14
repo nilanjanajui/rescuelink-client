@@ -19,6 +19,8 @@ export interface Mission {
   postedBy: string;
   createdAt: string;
   updatedAt: string;
+
+  posterName?: string;
 }
 
 export interface MissionUpdate {
@@ -38,9 +40,9 @@ export interface Pagination {
 }
 
 export interface Testimonial {
-    _id: string;
-    quote: string;
-    authorName: string;
-    authorRole: string;
-    avatarUrl: string;
+  _id: string;
+  quote: string;
+  authorName: string;
+  authorRole: string;
+  avatarUrl: string;
 }

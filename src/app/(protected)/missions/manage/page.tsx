@@ -7,25 +7,42 @@ import Button from "@/components/ui/Button";
 import Skeleton from "@/components/ui/Skeleton";
 import Modal from "@/components/ui/Modal";
 import { apiFetch, ApiError } from "@/lib/api";
+import { authClient } from "@/lib/auth-client";
 import type { Mission } from "@/types/mission";
 
+type Scope = "mine" | "all";
+
 export default function ManageMissionsPage() {
+    const { data: session } = authClient.useSession();
+    const isAdmin = session?.user?.role === "admin";
+
+    const [scope, setScope] = useState<Scope>("mine");
     const [missions, setMissions] = useState<Mission[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [pendingDeleteId, setPendingDeleteId] = useState<string | null>(null);
     const [busyId, setBusyId] = useState<string | null>(null);
 
-    const load = () => {
-        apiFetch<{ missions: Mission[] }>("/missions/mine")
+    const load = (currentScope: Scope) => {
+        const endpoint = currentScope === "all" ? "/missions/admin/all" : "/missions/mine";
+        apiFetch<{ missions: Mission[] }>(endpoint)
             .then((data) => setMissions(data.missions))
-            .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load your missions."))
+            .catch((err) => setError(err instanceof ApiError ? err.message : "Failed to load missions."))
             .finally(() => setLoading(false));
     };
 
+    // Initial load on mount — `loading` already starts true, so no synchronous
+    // setState is needed here.
     useEffect(() => {
-        load();
+        load("mine");
     }, []);
+
+    const handleScopeChange = (nextScope: Scope) => {
+        setScope(nextScope);
+        setLoading(true);
+        setError(null);
+        load(nextScope);
+    };
 
     const handleToggleStatus = async (mission: Mission) => {
         setBusyId(mission._id);
@@ -61,15 +78,36 @@ export default function ManageMissionsPage() {
 
     return (
         <div className="max-w-6xl mx-auto px-4 py-16">
-            <div className="flex items-center justify-between mb-8">
+            <div className="flex items-center justify-between mb-6 flex-wrap gap-4">
                 <div>
                     <h1 className="text-3xl font-bold text-neutral-900">Manage Missions</h1>
-                    <p className="text-neutral-600 mt-1">Missions you&apos;ve posted.</p>
+                    <p className="text-neutral-600 mt-1">
+                        {scope === "all" ? "All missions across RescueLink." : "Missions you've posted."}
+                    </p>
                 </div>
                 <Link href="/missions/add">
                     <Button>+ New Mission</Button>
                 </Link>
             </div>
+
+            {isAdmin && (
+                <div className="inline-flex rounded-full bg-neutral-100 p-1 mb-8">
+                    <button
+                        onClick={() => handleScopeChange("mine")}
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${scope === "mine" ? "bg-white text-primary shadow-sm" : "text-neutral-600"
+                            }`}
+                    >
+                        My Missions
+                    </button>
+                    <button
+                        onClick={() => handleScopeChange("all")}
+                        className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${scope === "all" ? "bg-white text-primary shadow-sm" : "text-neutral-600"
+                            }`}
+                    >
+                        All Missions (Admin)
+                    </button>
+                </div>
+            )}
 
             {error && <p className="text-sm text-red-600 mb-4">{error}</p>}
 
@@ -81,7 +119,9 @@ export default function ManageMissionsPage() {
                 </div>
             ) : missions.length === 0 ? (
                 <div className="text-center py-16 bg-white rounded-xl border border-neutral-100">
-                    <p className="text-neutral-600 mb-4">You haven&apos;t posted any missions yet.</p>
+                    <p className="text-neutral-600 mb-4">
+                        {scope === "all" ? "No missions have been posted yet." : "You haven't posted any missions yet."}
+                    </p>
                     <Link href="/missions/add">
                         <Button>Post Your First Mission</Button>
                     </Link>
@@ -94,6 +134,7 @@ export default function ManageMissionsPage() {
                             <thead className="bg-neutral-50 text-left text-neutral-600">
                                 <tr>
                                     <th className="px-4 py-3 font-medium">Mission</th>
+                                    {scope === "all" && <th className="px-4 py-3 font-medium">Posted By</th>}
                                     <th className="px-4 py-3 font-medium">Location</th>
                                     <th className="px-4 py-3 font-medium">Urgency</th>
                                     <th className="px-4 py-3 font-medium">Status</th>
@@ -112,6 +153,9 @@ export default function ManageMissionsPage() {
                                                 <span className="font-medium text-neutral-900">{mission.title}</span>
                                             </div>
                                         </td>
+                                        {scope === "all" && (
+                                            <td className="px-4 py-3 text-neutral-600">{mission.posterName ?? "Unknown"}</td>
+                                        )}
                                         <td className="px-4 py-3 text-neutral-600">{mission.location}</td>
                                         <td className="px-4 py-3"><Badge variant={mission.urgency}>{mission.urgency}</Badge></td>
                                         <td className="px-4 py-3"><Badge variant={mission.status}>{mission.status}</Badge></td>
@@ -156,6 +200,9 @@ export default function ManageMissionsPage() {
                                     <div>
                                         <p className="font-medium text-neutral-900">{mission.title}</p>
                                         <p className="text-sm text-neutral-600">{mission.location}</p>
+                                        {scope === "all" && (
+                                            <p className="text-xs text-neutral-500 mt-0.5">Posted by {mission.posterName ?? "Unknown"}</p>
+                                        )}
                                     </div>
                                 </div>
                                 <div className="flex gap-2 mb-3">
