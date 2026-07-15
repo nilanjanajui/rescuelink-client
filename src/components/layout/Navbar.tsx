@@ -19,12 +19,12 @@ export default function Navbar() {
 
     const loggedInLinks = [
         { href: "/", label: "Home" },
-        { href: "/dashboard", label: "Dashboard" },
         { href: "/explore", label: "Explore" },
         { href: "/about", label: "About" },
         { href: "/contact", label: "Contact" },
         ...(role !== "Tenant" ? [{ href: "/missions/add", label: "Add Mission" }] : []),
         ...(role !== "Tenant" ? [{ href: "/missions/manage", label: "Manage" }] : []),
+        { href: "/dashboard", label: "Dashboard" },
     ];
 
     const links = isLoggedIn ? loggedInLinks : loggedOutLinks;
