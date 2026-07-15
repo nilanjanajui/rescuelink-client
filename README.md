@@ -141,4 +141,4 @@ Protected routes are gated server-side (in a layout) — unauthenticated visitor
 
 ## 📄 License
 
-Built for educational/demo purposes as part of a full-stack TypeScript assignment.
+Built for educational/demo purposes as part of a full-stack TypeScript Project.
