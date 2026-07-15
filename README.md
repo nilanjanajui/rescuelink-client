@@ -10,7 +10,8 @@ This is the client half of the project. See the companion [rescuelink-server](ht
 
 | | URL |
 |---|---|
-| **Live Site** | [your-deployed-url-here] |
+| **Live Site** | https://rescuelink-client.vercel.app |
+| **Live API** | https://rescuelink-server.onrender.com |
 | **Server Repo** | https://github.com/nilanjanajui/rescuelink-server |
 
 ---
@@ -105,6 +106,11 @@ NEXT_PUBLIC_DEMO_USER_EMAIL=demo.user@rescuelink.org
 NEXT_PUBLIC_DEMO_USER_PASSWORD=your_demo_user_password
 NEXT_PUBLIC_DEMO_ADMIN_EMAIL=demo.admin@rescuelink.org
 NEXT_PUBLIC_DEMO_ADMIN_PASSWORD=your_demo_admin_password
+```
+
+To point at the deployed API instead of a local one, set:
+```
+NEXT_PUBLIC_API_URL=https://rescuelink-server.onrender.com
 ```
 
 ### 3. Seed demo accounts
