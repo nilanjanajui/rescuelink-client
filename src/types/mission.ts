@@ -46,3 +46,21 @@ export interface Testimonial {
   authorRole: string;
   avatarUrl: string;
 }
+
+export interface JoinedMission {
+    missionId: string;
+    joinedAt: string;
+    mission: Mission;
+}
+
+export interface DashboardData {
+    missionsJoinedCount: number;
+    recentJoinedMissions: JoinedMission[];
+    missionsPostedCount: number;
+    recentPostedMissions: Mission[];
+    platform?: {
+        totalMissions: number;
+        totalVolunteers: number;
+        successRate: number;
+    };
+}
