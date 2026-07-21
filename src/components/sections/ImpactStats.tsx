@@ -59,8 +59,8 @@ export default function ImpactStats() {
                             <YAxis tick={{ fontSize: 12 }} />
                             <Tooltip />
                             <Bar dataKey="volunteers" radius={[6, 6, 0, 0]}>
-                                {data1.map((entry, index) => (
-                                    <Cell key={index} fill={entry.color} />
+                                {data.map((entry, index) => (
+                                    <Cell key={index} fill={data1[index % data1.length].color} />
                                 ))}
                             </Bar>
                         </BarChart>
