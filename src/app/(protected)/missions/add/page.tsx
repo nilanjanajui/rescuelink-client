@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Input from "@/components/ui/Input";
 import Button from "@/components/ui/Button";
+import ImageUploader from "@/components/ui/ImageUploader";
 import { apiFetch, ApiError } from "@/lib/api";
 import type { Mission } from "@/types/mission";
 
@@ -28,6 +29,7 @@ type FormState = {
     urgency: string;
     location: string;
     volunteersNeeded: string;
+    estimatedHours: string;
     imageUrl: string;
 };
 
@@ -39,6 +41,7 @@ const initialState: FormState = {
     urgency: "moderate",
     location: "",
     volunteersNeeded: "",
+    estimatedHours: "4",
     imageUrl: "",
 };
 
@@ -65,6 +68,8 @@ export default function AddMissionPage() {
             return;
         }
 
+        const estimatedHours = Number(form.estimatedHours) || 4;
+
         setSubmitting(true);
         try {
             const { mission } = await apiFetch<{ mission: Mission }>("/missions", {
@@ -77,6 +82,7 @@ export default function AddMissionPage() {
                     urgency: form.urgency,
                     location: form.location,
                     volunteersNeeded,
+                    estimatedHours,
                     imageUrl: form.imageUrl || undefined,
                 }),
             });
@@ -150,30 +156,43 @@ export default function AddMissionPage() {
                     </div>
                 </div>
 
-                <div className="grid grid-cols-2 gap-4">
-                    <Input
-                        label="Location"
-                        placeholder="e.g. Sylhet, Bangladesh"
-                        value={form.location}
-                        onChange={(e) => update("location", e.target.value)}
-                        required
-                    />
-                    <Input
-                        label="Volunteers Needed"
-                        type="number"
-                        min="1"
-                        placeholder="e.g. 30"
-                        value={form.volunteersNeeded}
-                        onChange={(e) => update("volunteersNeeded", e.target.value)}
-                        required
-                    />
+                <div className="grid grid-cols-3 gap-4">
+                    <div className="col-span-1">
+                        <Input
+                            label="Location"
+                            placeholder="e.g. Sylhet, Sunamganj"
+                            value={form.location}
+                            onChange={(e) => update("location", e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            label="Volunteers Needed"
+                            type="number"
+                            min="1"
+                            placeholder="e.g. 30"
+                            value={form.volunteersNeeded}
+                            onChange={(e) => update("volunteersNeeded", e.target.value)}
+                            required
+                        />
+                    </div>
+                    <div>
+                        <Input
+                            label="Est. Hours / Volunteer"
+                            type="number"
+                            min="1"
+                            placeholder="e.g. 6"
+                            value={form.estimatedHours}
+                            onChange={(e) => update("estimatedHours", e.target.value)}
+                            required
+                        />
+                    </div>
                 </div>
 
-                <Input
-                    label="Image URL (optional)"
-                    placeholder="Leave blank to use a placeholder image"
+                <ImageUploader
                     value={form.imageUrl}
-                    onChange={(e) => update("imageUrl", e.target.value)}
+                    onChange={(url) => update("imageUrl", url)}
                 />
 
                 {error && <p className="text-sm text-red-600">{error}</p>}

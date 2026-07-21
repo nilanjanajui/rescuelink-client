@@ -21,6 +21,12 @@ export interface Mission {
   updatedAt: string;
 
   posterName?: string;
+  isVerified?: boolean;
+  estimatedHours?: number;
+  coordinates?: {
+    lat: number;
+    lng: number;
+  };
 }
 
 export interface MissionUpdate {
@@ -48,19 +54,19 @@ export interface Testimonial {
 }
 
 export interface JoinedMission {
-    missionId: string;
-    joinedAt: string;
-    mission: Mission;
+  missionId: string;
+  joinedAt: string;
+  mission: Mission;
 }
 
 export interface DashboardData {
-    missionsJoinedCount: number;
-    recentJoinedMissions: JoinedMission[];
-    missionsPostedCount: number;
-    recentPostedMissions: Mission[];
-    platform?: {
-        totalMissions: number;
-        totalVolunteers: number;
-        successRate: number;
-    };
+  missionsJoinedCount: number;
+  recentJoinedMissions: JoinedMission[];
+  missionsPostedCount: number;
+  recentPostedMissions: Mission[];
+  platform?: {
+    totalMissions: number;
+    totalVolunteers: number;
+    successRate: number;
+  };
 }

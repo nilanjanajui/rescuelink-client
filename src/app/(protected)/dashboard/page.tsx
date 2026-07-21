@@ -6,6 +6,7 @@ import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Skeleton from "@/components/ui/Skeleton";
+import AdminVerificationQueue from "@/components/admin/AdminVerificationQueue";
 import { apiFetch, ApiError } from "@/lib/api";
 import { authClient } from "@/lib/auth-client";
 import type { DashboardData } from "@/types/mission";
@@ -28,15 +29,17 @@ export default function DashboardPage() {
     }, []);
 
     return (
-        <div className="max-w-6xl mx-auto px-4 md:px-8 py-16">
-            <h1 className="text-3xl font-bold text-neutral-900 mb-1">
-                Welcome back{session?.user?.name ? `, ${session.user.name.split(" ")[0]}` : ""}
-            </h1>
-            <p className="text-neutral-600 mb-8">
-                {isTenant
-                    ? "Here's what's happening on RescueLink."
-                    : "Here's an overview of your missions and volunteer activity."}
-            </p>
+        <div className="max-w-6xl mx-auto px-4 md:px-8 py-16 space-y-10">
+            <div>
+                <h1 className="text-3xl font-bold text-neutral-900 mb-1">
+                    Welcome back{session?.user?.name ? `, ${session.user.name.split(" ")[0]}` : ""}
+                </h1>
+                <p className="text-neutral-600">
+                    {isTenant
+                        ? "Here's what's happening on RescueLink."
+                        : "Here's an overview of your missions and volunteer activity."}
+                </p>
+            </div>
 
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -47,7 +50,7 @@ export default function DashboardPage() {
             ) : data ? (
                 <>
                     {/* Stat cards */}
-                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
                         {!isTenant && (
                             <Card>
                                 <p className="text-3xl font-bold text-neutral-900">{data.missionsPostedCount}</p>
@@ -73,7 +76,7 @@ export default function DashboardPage() {
                     </div>
 
                     {/* Quick actions */}
-                    <div className="flex flex-wrap gap-3 mb-12">
+                    <div className="flex flex-wrap gap-3">
                         <Link href="/explore"><Button variant="outline">Explore Missions</Button></Link>
                         {!isTenant && (
                             <>
@@ -83,6 +86,9 @@ export default function DashboardPage() {
                         )}
                         <Link href="/profile"><Button variant="outline">Your Volunteer Profile</Button></Link>
                     </div>
+
+                    {/* Admin Organization Moderation Queue */}
+                    {isAdmin && <AdminVerificationQueue />}
 
                     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
                         {/* Recently posted */}

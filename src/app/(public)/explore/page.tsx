@@ -3,6 +3,8 @@ import { useEffect, useMemo, useState } from "react";
 import Input from "@/components/ui/Input";
 import Skeleton from "@/components/ui/Skeleton";
 import MissionCard from "@/components/missions/MissionCard";
+import MissionsMap from "@/components/missions/MissionsMap";
+import { useLanguage } from "@/components/providers/LanguageContext";
 import type { Mission, Pagination } from "@/types/mission";
 
 const DISASTER_OPTIONS = [
@@ -63,6 +65,8 @@ function FilterSelect({
 }
 
 export default function ExplorePage() {
+    const { t } = useLanguage();
+    const [viewMode, setViewMode] = useState<"grid" | "map">("grid");
     const [search, setSearch] = useState("");
     const [debouncedSearch, setDebouncedSearch] = useState("");
     const [disasterType, setDisasterType] = useState("");
@@ -71,8 +75,8 @@ export default function ExplorePage() {
     const [sort, setSort] = useState("urgent");
     const [page, setPage] = useState(1);
 
-    const [missions, setMissions] = useState < Mission[] > ([]);
-    const [pagination, setPagination] = useState < Pagination | null > (null);
+    const [missions, setMissions] = useState<Mission[]>([]);
+    const [pagination, setPagination] = useState<Pagination | null>(null);
     const [loading, setLoading] = useState(true);
 
     const handleSearchChange = (value: string) => setSearch(value);
@@ -130,23 +134,45 @@ export default function ExplorePage() {
     const pageNumbers = useMemo(() => {
         if (!pagination) return [];
         const { page: current, totalPages } = pagination;
-        const nums = new Set < number > ([1, totalPages, current, current - 1, current + 1]);
+        const nums = new Set<number>([1, totalPages, current, current - 1, current + 1]);
         return [...nums].filter((n) => n >= 1 && n <= totalPages).sort((a, b) => a - b);
     }, [pagination]);
 
     return (
         <div className="max-w-7xl mx-auto px-4 md:px-8 py-16">
             <div className="text-center mb-10">
-                <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">Explore Relief Missions</h1>
+                <h1 className="text-3xl md:text-4xl font-bold text-neutral-900">{t("missions.title")}</h1>
                 <p className="text-neutral-600 mt-2">Search and filter active missions to find where your skills are needed most.</p>
             </div>
 
-            <div className="max-w-2xl mx-auto mb-6">
-                <Input
-                    placeholder="Search by location, disaster type, or keyword"
-                    value={search}
-                    onChange={(e) => handleSearchChange(e.target.value)}
-                />
+            {/* View Mode Toggle & Search */}
+            <div className="max-w-2xl mx-auto mb-6 flex items-center gap-3">
+                <div className="flex-1">
+                    <Input
+                        placeholder="Search by location, disaster type, or keyword"
+                        value={search}
+                        onChange={(e) => handleSearchChange(e.target.value)}
+                    />
+                </div>
+
+                <div className="flex items-center bg-neutral-100 p-1 rounded-xl border border-neutral-200 shrink-0">
+                    <button
+                        onClick={() => setViewMode("grid")}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                            viewMode === "grid" ? "bg-white text-neutral-900 shadow-xs" : "text-neutral-500 hover:text-neutral-800"
+                        }`}
+                    >
+                        <span>📱</span> {t("missions.view_grid")}
+                    </button>
+                    <button
+                        onClick={() => setViewMode("map")}
+                        className={`px-3 py-2 rounded-lg text-xs font-semibold flex items-center gap-1.5 transition-all ${
+                            viewMode === "map" ? "bg-white text-neutral-900 shadow-xs" : "text-neutral-500 hover:text-neutral-800"
+                        }`}
+                    >
+                        <span>🗺️</span> {t("missions.view_map")}
+                    </button>
+                </div>
             </div>
 
             <div className="flex flex-wrap justify-center gap-3 mb-10">
@@ -165,6 +191,10 @@ export default function ExplorePage() {
                 </div>
             ) : missions.length === 0 ? (
                 <p className="text-center text-neutral-600 py-16">No missions match your filters right now.</p>
+            ) : viewMode === "map" ? (
+                <div className="mb-12">
+                    <MissionsMap missions={missions} />
+                </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                     {missions.map((mission) => (
@@ -173,7 +203,7 @@ export default function ExplorePage() {
                 </div>
             )}
 
-            {pagination && pagination.totalPages > 1 && (
+            {viewMode === "grid" && pagination && pagination.totalPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-12">
                     <button
                         onClick={() => { setLoading(true); setPage((p) => Math.max(1, p - 1)); }}
