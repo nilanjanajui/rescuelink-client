@@ -9,6 +9,8 @@
  *  - three "org" poster accounts (Red Crescent, Fire Service, Ocean Cleanup)
  *    whose IDs the server's mission seed script (`npm run seed` in
  *    rescuelink-server) looks up by email to use as Mission.postedBy
+ *  - 100 "volunteer" accounts (volunteer.001..volunteer.100) whose IDs the
+ *    server's mission seed script reads back as the volunteer signup pool
  *
  * The one exception to "never write raw documents" is promoting the admin's
  * role: Better Auth's `admin.setRole` endpoint requires an authenticated
@@ -51,6 +53,24 @@ const orgPosters: DemoAccount[] = [
     { name: "Ocean Cleanup BD", email: "org.oceancleanup@rescuelink.org", password: "orgSeedPass123!", role: "user" },
 ];
 
+// 100 volunteer accounts — fixed, predictable emails so the server's seed
+// script can read them back as volunteer.001@rescuelink.org .. .100.
+// NOTE: a single shared password across 100 accounts is fine for local/demo
+// use only. If this script is ever pointed at a shared or public database,
+// this needs to come from a real per-account secret instead.
+const VOLUNTEER_COUNT = 100;
+const VOLUNTEER_PASSWORD = process.env.NEXT_PUBLIC_SEED_VOLUNTEER_PASSWORD ?? "volunteerSeedPass123!";
+
+const volunteerAccounts: DemoAccount[] = Array.from({ length: VOLUNTEER_COUNT }, (_, i) => {
+    const n = String(i + 1).padStart(3, "0");
+    return {
+        name: `Volunteer ${n}`,
+        email: `volunteer.${n}@rescuelink.org`,
+        password: VOLUNTEER_PASSWORD,
+        role: "user",
+    };
+});
+
 function isAlreadyExistsError(err: unknown): boolean {
     const message = err instanceof Error ? err.message : String(err);
     return message.toLowerCase().includes("already exist") || message.toLowerCase().includes("already registered");
@@ -77,6 +97,18 @@ async function ensureAccount(account: DemoAccount) {
     }
 }
 
+// Runs a batch of accounts with limited concurrency instead of one at a time
+// (100 fully-serial signUpEmail calls, each hashing a password, adds real
+// time to every seed:auth run) or fully parallel (untested whether Better
+// Auth's email/password provider is safe to hammer concurrently against the
+// same Mongo connection).
+async function ensureAccountsInBatches(accounts: DemoAccount[], batchSize = 10) {
+    for (let i = 0; i < accounts.length; i += batchSize) {
+        const batch = accounts.slice(i, i + batchSize);
+        await Promise.all(batch.map(ensureAccount));
+    }
+}
+
 async function promoteToAdmin(email: string) {
     const client = new MongoClient(process.env.MONGO_URI as string);
     try {
@@ -98,6 +130,10 @@ async function main() {
     for (const org of orgPosters) {
         await ensureAccount(org);
     }
+
+    console.log(`\nCreating ${VOLUNTEER_COUNT} volunteer accounts...`);
+    await ensureAccountsInBatches(volunteerAccounts);
+
     await promoteToAdmin(demoAdmin.email);
     console.log("\nDemo accounts ready. You can now use the Demo Login buttons on /login,");
     console.log("and run `npm run seed` in rescuelink-server to seed missions/testimonials.");
