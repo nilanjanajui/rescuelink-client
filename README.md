@@ -1,8 +1,8 @@
 # 🛟 RescueLink — Client
 
-The frontend for **RescueLink**, a disaster relief coordination platform that connects volunteers with active relief missions. Built with Next.js and TypeScript.
+The frontend for **RescueLink**, a disaster relief coordination platform that connects volunteers with active relief missions. Built with Next.js 15 (App Router) and TypeScript.
 
-This is the client half of the project. See the companion [rescuelink-server](https://github.com/nilanjanajui/rescuelink-server) repo for the API.
+This is the client half of the project. See the companion [rescuelink-server](https://github.com/nilanjanajui/rescuelink-server) repo for the API backend.
 
 ---
 
@@ -27,34 +27,36 @@ Or use the **Demo Login (User)** / **Demo Login (Admin)** buttons on `/login`.
 
 ---
 
-## ✨ Features
+## 🗺️ Application Page Routes (17 Pages)
 
-### Public
-- **Landing page** — hero, how-it-works, featured missions, disaster categories, impact stats, testimonials, partners, newsletter signup
-- **Explore missions** — search, filter (disaster type / urgency / status), sort (urgency / recency / volunteers needed), pagination, skeleton loaders
-- **Mission details** — image gallery, overview, live recruitment progress, updates feed, related missions
-- **About, Contact, Privacy Policy, Terms of Service**
-- **Resource pages** — disaster manuals, impact reports, press kit, success stories
+### Public Routes
+- 🏠 **Home Page** (`/`) — Hero, How It Works, Featured Missions, Impact Stats, Testimonials, Newsletter
+- 🔍 **Explore Missions** (`/explore`) — Debounced search, filter by disaster/urgency/status, sort, Grid/Map toggle, pagination
+- 📌 **Mission Details** (`/missions/[id]`) — Image gallery, live recruitment progress, updates timeline, volunteer join modal
+- 🔑 **Login** (`/login`) — Email/password login, Google sign-in, instant Demo Login buttons
+- 📝 **Register** (`/register`) — Account onboarding with role selection (`User`, `Admin`, `Tenant`) and skill tags
+- ℹ️ **About Us** (`/about`) — Mission overview, core operational values, impact metrics, team advisors
+- 📞 **Contact Us** (`/contact`) — Interactive contact form with category routing (`General`, `Partnership`, `Media`, `Emergency`)
+- 🔒 **Privacy Policy** (`/privacy-policy`) — Data handling, encryption standards, volunteer privacy rights
+- 📄 **Terms of Service** (`/terms-of-service`) — Platform guidelines, code of conduct, liability terms
+- 📖 **Disaster Preparedness Manuals** (`/resources/disaster-manuals`) — Emergency readiness guides for Floods, Earthquakes, Fires, Cyclones
+- 📊 **Impact Reports** (`/resources/impact-reports`) — Operations audits, supply statistics, annual performance metrics
+- 📰 **Press Kit** (`/resources/press-kit`) — Media downloads, brand guidelines, logo assets, press contact
+- ⭐ **Success Stories** (`/resources/success-stories`) — Case studies of completed operations and volunteer spotlights
 
-### Authentication
-- Email/password login & registration with validation
-- Google social login
-- Demo login buttons (instant sign-in as user or admin)
-- Role-based UI (user / admin / tenant)
-
-### Protected (logged-in)
-- **Dashboard** — posted missions, joined missions, and (for admins) platform-wide stats
-- **Add Mission** (`/missions/add`)
-- **Manage Missions** (`/missions/manage`) — view, mark resolved/reopen, delete; admin scope toggle for all missions
-- **Profile** — account info, joined missions list
+### Protected Routes (Login Required)
+- 📊 **Dashboard** (`/dashboard`) — Posted/joined mission counters, platform stats (Admins), recent activity, Admin verification queue
+- ➕ **Add Mission** (`/missions/add`) — Post new disaster relief mission with location, urgency, needed skills, image URL
+- ⚙️ **Manage Missions** (`/missions/manage`) — Active/Resolved status toggle, delete mission modal, Admin global view switch
+- 👤 **User Profile** (`/profile`) — Account details, joined mission history timeline, logout action
 
 ---
 
 ## 🛠 Tech Stack
 
-- Next.js (App Router) + TypeScript
+- Next.js 15 (App Router) + TypeScript
 - Tailwind CSS
-- Better Auth (client)
+- Better Auth (client authentication)
 
 ---
 
@@ -63,19 +65,19 @@ Or use the **Demo Login (User)** / **Demo Login (Admin)** buttons on `/login`.
 ```
 src/
 ├── app/
-│   ├── (public)/          # landing, explore, mission details, login/register, static pages
-│   ├── (protected)/       # dashboard, missions/add, missions/manage, profile
+│   ├── (public)/          # Landing, explore, mission details, login/register, static pages, resources
+│   ├── (protected)/       # Dashboard, missions/add, missions/manage, profile
 │   └── api/auth/[...all]/ # Better Auth route handler
 ├── components/
-│   ├── sections/          # homepage sections
-│   ├── missions/          # mission card, join button, updates feed, related missions
-│   ├── profile/           # joined missions list, sign out
-│   ├── layout/            # navbar, footer
-│   └── ui/                # button, card, input, modal, badge, skeleton
-├── lib/                   # api client, auth client, formatting helpers
-└── types/                 # shared TypeScript types
+│   ├── sections/          # Homepage sections (Hero, HowItWorks, FeaturedMissions, etc.)
+│   ├── missions/          # Mission card, map view, join modal, updates feed, related missions
+│   ├── profile/           # Joined missions list, user card
+│   ├── layout/            # Navbar, footer
+│   └── ui/                # Button, card, input, modal, badge, skeleton
+├── lib/                   # API client, auth client, formatting helpers
+└── types/                 # Shared TypeScript types
 scripts/
-└── seed-auth.ts           # seeds demo user/admin/org accounts via Better Auth
+└── seed-auth.ts           # Seeds demo user/admin/org accounts via Better Auth
 ```
 
 ---
@@ -96,7 +98,7 @@ npm install
 ### 2. Configure environment
 
 Create `.env.local`:
-```
+```env
 NEXT_PUBLIC_API_URL=http://localhost:5000
 
 MONGO_URI=your_mongodb_connection_string
@@ -108,34 +110,17 @@ NEXT_PUBLIC_DEMO_ADMIN_EMAIL=demo.admin@rescuelink.org
 NEXT_PUBLIC_DEMO_ADMIN_PASSWORD=your_demo_admin_password
 ```
 
-To point at the deployed API instead of a local one, set:
-```
-NEXT_PUBLIC_API_URL=https://rescuelink-server.onrender.com
-```
-
 ### 3. Seed demo accounts
 ```bash
 npm run seed:auth
 ```
-Creates the demo user, demo admin (promoted to `role: admin`), and three org-poster accounts used by the server's mission seed data.
+Creates the demo user, demo admin (promoted to `role: admin`), and three org-poster accounts.
 
 ### 4. Run
 ```bash
 npm run dev
 ```
 Visit **http://localhost:3000**.
-
-> Make sure the server is running first (see the server README) so API calls succeed.
-
----
-
-## 🔐 Roles
-
-- **User** — post/manage own missions, join missions, view dashboard
-- **Admin** — everything a user can, plus platform-wide stats and managing all missions
-- **Tenant** — browse-only accounts, redirected away from posting/management routes
-
-Protected routes are gated server-side (in a layout) — unauthenticated visitors are redirected to `/login`.
 
 ---
 
