@@ -87,12 +87,14 @@ export default function ExplorePage() {
 
     useEffect(() => {
         const t = setTimeout(() => {
-            setDebouncedSearch(search);
-            setPage(1);
-            setLoading(true);
+            if (search !== debouncedSearch) {
+                setDebouncedSearch(search);
+                setPage(1);
+                setLoading(true);
+            }
         }, 400);
         return () => clearTimeout(t);
-    }, [search]);
+    }, [search, debouncedSearch]);
 
     const queryString = useMemo(() => {
         const params = new URLSearchParams();
