@@ -27,6 +27,10 @@ export interface Mission {
     lat: number;
     lng: number;
   };
+  aiMatchScore?: number;
+  aiMatchReason?: string;
+  source?: 'RescueLink' | 'Adzuna' | string;
+  redirectUrl?: string;
 }
 
 export interface MissionUpdate {

@@ -7,6 +7,7 @@ import Button from "@/components/ui/Button";
 import Card from "@/components/ui/Card";
 import Skeleton from "@/components/ui/Skeleton";
 import AdminVerificationQueue from "@/components/admin/AdminVerificationQueue";
+import AIRecommendations from "@/components/missions/AIRecommendations";
 import { apiFetch, ApiError } from "@/lib/api";
 import { authClient } from "@/lib/auth-client";
 import type { DashboardData } from "@/types/mission";
@@ -40,6 +41,9 @@ export default function DashboardPage() {
                         : "Here's an overview of your missions and volunteer activity."}
                 </p>
             </div>
+
+            {/* AI Recommendation Engine Banner */}
+            <AIRecommendations />
 
             {loading ? (
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
